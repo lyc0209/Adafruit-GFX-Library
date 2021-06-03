@@ -1389,4 +1389,53 @@ void GFXcanvas16::fillScreen(uint16_t color) {
     }
 }
 
+void Adafruit_GFX::drawEllipse2(int16_t x0, int16_t y0, int16_t a, 
+        int16_t b, uint16_t color) {
+    int16_t sq_a = a * a;
+    int16_t sq_b = b * b;
+    int16_t x = 0;
+    int16_t y = b;
+    int16_t d = 2 * sq_b - 2 * b * sq_a + sq_a;
+
+    startWrite();
+    writePixel(x0, y0 + b, color);
+    writePixel(x0, y0 - b, color);
+
+
+    int P_x = (double)sq_a/sqrt((double)(sq_a+sq_b)) + 0.5;
+
+    while(x <= P_x){
+
+        if(d < 0)
+            d += 2 * sq_b * (2 * x + 3);
+        else
+            d += 2 * sq_b * (2 * x + 3) - 4 * sq_a * (y - 1);
+            y--;
+
+        x++;
+        writePixel(x0 + x, y0 + y, color);
+        writePixel(x0 - x, y0 + y, color);
+        writePixel(x0 + x, y0 - y, color);
+        writePixel(x0 - x, y0 - y, color);
+    }
+
+    d = sq_b * (x * x + x) + sq_a * (y * y - y) - sq_a * sq_b;
+    while(y >= 0){
+        writePixel(x0 + x, y0 + y, color);
+        writePixel(x0 - x, y0 + y, color);
+        writePixel(x0 + x, y0 - y, color);
+        writePixel(x0 - x, y0 - y, color);
+        y--;
+        if(d < 0){
+            x++;
+            d = d - 2 * sq_a * y - sq_a + 2 * sq_b * x + 2 * sq_b;
+         }
+        else
+            d = d - 2 * sq_a * y - sq_a;
+    }
+
+    endWrite();
+}
+
+
 
