@@ -298,6 +298,37 @@ void Adafruit_GFX::fillCircle(int16_t x0, int16_t y0, int16_t r,
     endWrite();
 }
 
+#define cos18 0.95106
+#define sin18 0.30902
+#define cos36 0.80902
+#define sin36 0.58779
+
+void Adafruit_GFX::drawPentagram(int16_t x, int16_t y, int16_t radius, int16_t color)
+{
+  int16_t p1_x = x - radius * cos18;
+  int16_t p1_y = y - radius * sin18;
+
+  int16_t p2_x = x;
+  int16_t p2_y = y - radius;
+
+  int16_t p3_x = x + radius * cos18;
+  int16_t p3_y = y - radius * sin18;
+
+  int16_t p4_x = x + radius * sin36;
+  int16_t p4_y = y + radius * cos36;
+
+  int16_t p5_x = x - radius * sin36;
+  int16_t p5_y = y + radius * cos36;
+  
+  startWrite();
+  writeLine(p1_x,p1_y,p3_x,p3_y,color);
+  writeLine(p1_x,p1_y,p4_x,p4_y,color);
+  writeLine(p2_x,p2_y,p4_x,p4_y,color);
+  writeLine(p2_x,p2_y,p5_x,p5_y,color);
+  writeLine(p3_x,p3_y,p5_x,p5_y,color);
+  endWrite();
+}
+
 // Used to do circles and roundrects
 void Adafruit_GFX::fillCircleHelper(int16_t x0, int16_t y0, int16_t r,
         uint8_t cornername, int16_t delta, uint16_t color) {
